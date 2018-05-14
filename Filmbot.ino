@@ -478,6 +478,9 @@ void RunDevCycle() {
   DrawOutline(2,F("Fix Phase"));
   FluidCycle(FixTime,Fix,Fix);
 
+  DrawOutline(2,F("Back Wash"));
+  BackWashSystem();
+
   DrawOutline(2,F("Wash 1 Phase"));
   FluidCycle(RinseTime,Water,Waste);
   
@@ -543,8 +546,8 @@ void FluidCycle (float CycleTime,int FluidIn, int FluidOut) {
   TimeRemaining = FinishTime - millis(); 
   if (CycleTime == 3600000) {
     // FOR STAND DEVELOPMENT
-    CycleAgitationFrequency = 4000000;
-    CycleAgitationTime = 30000;
+    CycleAgitationFrequency = 1200000;
+    CycleAgitationTime = 15000;
     Agitate(CycleAgitationTime);
   } else {
     CycleAgitationFrequency = AgitationFrequency;
@@ -635,3 +638,16 @@ void CleanSystem () {
   PumpFluid(Waste,64,PumpTime);
 }
 
+void BackWashSystem () {
+  int BackWashTime = 2000; // 1000 ml
+  PumpFluid(Water,128,BackWashTime*5);
+  delay(500);
+  PumpFluid(Dev,64,BackWashTime);
+  delay(500);
+  PumpFluid(Stop,64,BackWashTime);
+  delay(500);
+  PumpFluid(Fix,64,BackWashTime);
+  delay(500);
+  PumpFluid(Waste,64,BackWashTime*3);
+  delay(500);
+}
